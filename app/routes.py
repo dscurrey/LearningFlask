@@ -1,26 +1,24 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Entry
 from werkzeug.urls import url_parse
 from datetime import datetime
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    entries = [
-        {
-            'author': {'username': 'Dave'},
-            'body': 'Dave\'s Body Text'
-        },
-        {
-            'author': {'username': 'NotDave'},
-            'body': 'Some text also'
-        }
-    ]
-    return render_template('index.html', title='Index', entries=entries)
+    form = PostForm()
+    if form.validate_on_submit():
+        entry = Entry(body=form.post.data, author=current_user)
+        db.session.add(entry)
+        db.session.commit()
+        flash('Post has been published')
+        return redirect(url_for('index'))
+    entries = current_user.followed_posts().all()
+    return render_template("index.html", title='Index', form=form, entries=entries)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
