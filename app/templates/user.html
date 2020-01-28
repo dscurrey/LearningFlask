@@ -9,11 +9,6 @@
     </table>
     <hr>
     {% for entry in entries %}
-    <table>
-        <tr valign="top">
-            <td><img src="{{ entry.author.avatar(36) }}"></td>
-            <td>{{ entry.author.username }} says:<br>{{ entry.body }}</td>
-        </tr>
-    </table>>
+        {% include '_post.html' %}
     {% endfor %}
 {% endblock %}

@@ -1,3 +1,4 @@
+from hashlib import md5
 from app import login
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
