@@ -9,8 +9,11 @@
     </table>
     <hr>
     {% for entry in entries %}
-    <p>
-        <b>{{ entry.author.username }} says: </b>{{ entry.body }}
-    </p>
+    <table>
+        <tr valign="top">
+            <td><img src="{{ entry.author.avatar(36) }}"></td>
+            <td>{{ entry.author.username }} says:<br>{{ entry.body }}</td>
+        </tr>
+    </table>>
     {% endfor %}
 {% endblock %}
