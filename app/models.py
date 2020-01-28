@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
-        backref=db.backref('followers', lazy='dynammic'), lazy='dynamic'
+        backref=db.backref('followers', lazy='dynamic'), lazy='dynamic'
     )
 
     def set_password(self, password):
@@ -45,7 +45,6 @@ class User(UserMixin, db.Model):
     def is_following(self, user):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
-        )
     
     def followed_posts(self):
         followed = Post.query.join(
