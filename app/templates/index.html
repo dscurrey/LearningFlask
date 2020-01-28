@@ -8,5 +8,8 @@
     </head>
     <body>
         <h1>Hello, {{ user.username }}.</h1>
+        {% for entry in entries %}
+        <div><p><b>{{ entry.author.username }} says: </b>{{ entry.body }}</p></div>
+        {% endfor %}
     </body>
 </html>
