@@ -10,6 +10,7 @@ RUN venv/bin/pip install -r requirements.txt
 RUN venv/bin/pip install gunicorn
 
 COPY app app
+COPY migrations migrations
 COPY learningflask.py config.py boot.sh ./
 
 ENV FLASK_APP learningflask.py
