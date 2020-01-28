@@ -29,5 +29,5 @@ class Entry(db.Model):
         return '<Post {}>'.format(self.body)
 
 @login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(userid):
+    return User.query.get(int(userid))
