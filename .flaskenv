@@ -1,1 +1,2 @@
 FLASK_APP=learningflask.py
+FLASK_DEBUG=0
