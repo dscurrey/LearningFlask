@@ -17,8 +17,14 @@ def index():
         db.session.commit()
         flash('Post has been published')
         return redirect(url_for('index'))
-    entries = current_user.followed_posts().all()
-    return render_template("index.html", title='Index', form=form, entries=entries)
+    page = request.args.get('page', 1, type=int)
+    entries = current_user.followed_posts().paginate(
+        page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('index', page=entries.next_num) \
+        if entries.has_next else None
+    prev_url = url_for('index', page=entries.prev_num) \
+        if entries.has_prev else None
+    return render_template('index.html', title='Index', form=form, entries=entries.items, next_url=next_url, prev_url=prev_url)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -120,5 +126,12 @@ def unfollow(username):
 @app.route('/explore')
 @login_required
 def explore():
-    entries = Entry.query.order_by(Entry.timestamp.desc()).all()
-    return render_template('index.html', title='Explore', entries=entries)
+    page = request.args.get('page', 1, type=int)
+    entries = Entry.query.order_by(Entry.timestamp.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False
+    )
+    next_url = url_for('explore', page=entries.next_num) \
+        if entries.has_next else None
+    prev_url = url_for('explore', page=entries.prev_num) \
+        if entries.has_prev else None
+    return render_template('index.html', title='Explore', entries=entries.items, prev_url=prev_url, next_url=next_url)
