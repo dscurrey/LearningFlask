@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    posts = db.relationship('Entry', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     followed = db.relationship(
@@ -47,7 +48,7 @@ class User(UserMixin, db.Model):
             followers.c.followed_id == user.id).count() > 0
     
     def followed_posts(self):
-        followed = Post.query.join(
+        followed = Entry.query.join(
             followers, (followers.c.followed_id == Entry.user_id)
         ).filter(
             followers.c.follower_id == self.id
@@ -62,7 +63,7 @@ class Entry(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Post {}>'.format(self.body)
+        return '<Entry {}>'.format(self.body)
 
 @login.user_loader
 def load_user(userid):
